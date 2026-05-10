@@ -1,0 +1,23 @@
+{
+  "name": "ant-cleaning",
+  "private": true,
+  "version": "0.1.0",
+  "description": "개미청소 건물관리 PWA",
+  "workspaces": [
+    "apps/*",
+    "functions"
+  ],
+  "scripts": {
+    "dev": "npm --workspace apps/web run dev",
+    "build": "npm --workspace apps/web run build",
+    "lint": "npm --workspace apps/web run lint",
+    "typecheck": "npm --workspace apps/web run typecheck && npm --workspace functions run typecheck",
+    "emulators": "firebase emulators:start --import=./seeds --export-on-exit"
+  },
+  "devDependencies": {
+    "firebase-tools": "^13.0.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

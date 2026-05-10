@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Material Symbols (Google icons) ---------- */
+/* @import "material-symbols/rounded.css"; -- 패키지 설치 후 활성화 */
+
+@layer base {
+  :root {
+    color-scheme: light;
+    /* 기본 폰트 크기 16px 명시 (시니어 가독성, Tailwind rem 기준) */
+    font-size: 16px;
+  }
+
+  html, body {
+    height: 100%;
+    background: #FFFFFF;
+    color: #0B1B2B;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: theme("fontFamily.sans");
+    font-size: 1rem; /* 16px */
+    line-height: 1.6;
+    /* iOS 안전 영역 */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* 인터랙션 영역 최소 44x44 */
+  button, [role="button"], a.button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 사용자 줌 허용하되 폰트 boost는 차단 */
+  * {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}
+
+@layer components {
+  .ms-icon {
+    font-family: "Material Symbols Rounded", "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings:
+      "FILL" 0,
+      "wght" 400,
+      "GRAD" 0,
+      "opsz" 24;
+  }
+  .ms-icon[data-filled="true"] {
+    font-variation-settings:
+      "FILL" 1,
+      "wght" 500,
+      "GRAD" 0,
+      "opsz" 24;
+  }
+}

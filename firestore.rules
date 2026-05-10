@@ -1,0 +1,145 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function role() {
+      return request.auth.token.role;
+    }
+    function isSuper() {
+      return isSignedIn() && request.auth.token.sm == true;
+    }
+    function isManager() {
+      return isSignedIn() && (role() == 'cleaning_manager' || role() == 'super_manager');
+    }
+    function inBuilding(bid) {
+      return isSignedIn() && (isSuper() || (request.auth.token.bIds is list && bid in request.auth.token.bIds));
+    }
+    function uid() {
+      return request.auth.uid;
+    }
+
+    // ---------- users ----------
+    match /users/{userId} {
+      allow read: if isSignedIn() && (uid() == userId || isManager());
+      allow create: if isSignedIn() && uid() == userId;
+      allow update: if isSignedIn() && (uid() == userId || isSuper());
+      allow delete: if isSuper();
+    }
+
+    // ---------- buildings ----------
+    match /buildings/{bid} {
+      allow read: if isSignedIn() && (isSuper() || inBuilding(bid));
+      allow write: if isSuper();
+
+      match /units/{unitId} {
+        allow read: if inBuilding(bid);
+        allow write: if isManager() && inBuilding(bid);
+      }
+
+      match /residents/{residentId} {
+        allow read: if inBuilding(bid);
+        allow write: if isManager() && inBuilding(bid);
+      }
+
+      match /memberships/{membershipId} {
+        allow read: if isSuper() || inBuilding(bid);
+        allow write: if isSuper();
+      }
+
+      match /memos/{memoId} {
+        allow read, write: if isManager() && inBuilding(bid);
+      }
+    }
+
+    // ---------- requests (top-level) ----------
+    match /requests/{requestId} {
+      allow create: if isSignedIn()
+        && role() == 'resident'
+        && request.resource.data.residentId == uid()
+        && inBuilding(request.resource.data.buildingId);
+
+      allow read: if isSignedIn() && (
+        (role() == 'resident' && resource.data.residentId == uid()) ||
+        (isManager() && inBuilding(resource.data.buildingId)) ||
+        (role() == 'building_owner' && inBuilding(resource.data.buildingId))
+      );
+
+      allow update: if isManager()
+        && inBuilding(resource.data.buildingId)
+        && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['status', 'assignedTo', 'priority', 'updatedAt', 'completedAt']);
+
+      allow delete: if isSuper();
+
+      match /events/{eventId} {
+        allow read: if isSignedIn() && (
+          (role() == 'resident' && get(/databases/$(database)/documents/requests/$(requestId)).data.residentId == uid()) ||
+          (isManager() && inBuilding(get(/databases/$(database)/documents/requests/$(requestId)).data.buildingId))
+        );
+        allow write: if false; // Functions only
+      }
+    }
+
+    // ---------- invoices ----------
+    match /invoices/{invoiceId} {
+      allow read: if isSignedIn() && (
+        isSuper() ||
+        (isManager() && inBuilding(resource.data.buildingId)) ||
+        (role() == 'building_owner' && inBuilding(resource.data.buildingId))
+      );
+      allow create, update: if isManager() && inBuilding(request.resource.data.buildingId);
+      allow delete: if isSuper();
+    }
+
+    // ---------- reports ----------
+    match /reports/{reportId} {
+      allow read: if isSignedIn() && (
+        isSuper() ||
+        (isManager() && inBuilding(resource.data.buildingId)) ||
+        (role() == 'building_owner' && inBuilding(resource.data.buildingId))
+      );
+      allow write: if false; // Functions only
+    }
+
+    // ---------- notifications ----------
+    match /notifications/{notificationId} {
+      allow read, update: if isSignedIn() && resource.data.recipientUid == uid();
+      allow create: if false; // Functions only
+      allow delete: if isSignedIn() && resource.data.recipientUid == uid();
+    }
+
+    // ---------- fcm tokens ----------
+    match /fcmTokens/{userId}/devices/{tokenId} {
+      allow read, write: if isSignedIn() && uid() == userId;
+    }
+
+    // ---------- telegram links ----------
+    match /telegramLinks/{userId} {
+      allow read: if isSignedIn() && uid() == userId;
+      allow write: if false; // Functions only
+    }
+
+    // ---------- posts (cleaning blog) ----------
+    match /posts/{postId} {
+      allow read: if (resource.data.published == true) || isManager();
+      allow create, update: if isManager();
+      allow delete: if isSuper();
+    }
+
+    // ---------- counters / audit ----------
+    match /counters/{counterId} {
+      allow read: if isManager();
+      allow write: if false; // Functions only
+    }
+
+    match /auditLogs/{logId} {
+      allow read: if isSuper();
+      allow write: if false;
+    }
+  }
+}
