@@ -18,6 +18,10 @@ export { onUserCreated } from "./triggers/onUserCreated";
 // Firestore triggers (Phase 1)
 export { onMembershipChanged } from "./triggers/onMembershipChanged";
 
+// Firestore triggers (Phase 3)
+export { onRequestCreated } from "./triggers/onRequestCreated";
+export { onRequestStatusChanged } from "./triggers/onRequestStatusChanged";
+
 // Callable (Phase 1)
 export { setUserRole } from "./callable/setUserRole";
 
