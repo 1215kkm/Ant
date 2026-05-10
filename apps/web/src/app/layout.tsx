@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "material-symbols/rounded.css";
+import { AuthProvider } from "@/lib/auth/AuthProvider";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: {
@@ -54,7 +56,8 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-white text-[#0B1B2B] antialiased">
-        {children}
+        <AuthProvider>{children}</AuthProvider>
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   );

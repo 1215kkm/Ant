@@ -2,11 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { SplashScreen } from "@/components/feature/splash/SplashScreen";
 import { Icon } from "@/components/ui/Icon";
+import { useAuth } from "@/lib/auth/AuthProvider";
+import { ROLE_LABEL_KO, isManagerRole } from "@/lib/auth/roles";
 
 export default function HomePage() {
   const [splashed, setSplashed] = useState(false);
+  const { user, claims, loading, signOut } = useAuth();
+  const router = useRouter();
+  const isManager = isManagerRole(claims?.role);
+  const isSuper = claims?.sm === true;
 
   return (
     <>
@@ -16,10 +23,40 @@ export default function HomePage() {
         {/* 헤더 */}
         <header className="flex items-center gap-3 px-4 pt-6 pb-4">
           <img src="/brand/ant-clean-logo.svg" alt="" className="h-10 w-10" />
-          <div>
+          <div className="flex-1">
             <h1 className="text-xl font-semibold text-brand-900">개미청소</h1>
-            <p className="text-sm text-brand-700">건물관리 앱</p>
+            <p className="text-sm text-brand-700">
+              {loading
+                ? "확인 중…"
+                : user
+                  ? claims?.role
+                    ? ROLE_LABEL_KO[claims.role]
+                    : "역할 미지정"
+                  : "건물관리 앱"}
+            </p>
           </div>
+          {user ? (
+            <button
+              type="button"
+              onClick={async () => {
+                await signOut();
+                router.refresh();
+              }}
+              className="inline-flex min-h-tap items-center gap-1 rounded-lg border border-brand-200 px-3 py-2 text-sm text-brand-700"
+              aria-label="로그아웃"
+            >
+              <Icon name="logout" size={20} />
+              <span className="sr-only sm:not-sr-only">로그아웃</span>
+            </button>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex min-h-tap items-center gap-1 rounded-lg bg-brand-500 px-3 py-2 text-sm text-white"
+            >
+              <Icon name="login" size={20} />
+              <span>로그인</span>
+            </Link>
+          )}
         </header>
 
         {/* 히어로 카드 */}
@@ -35,35 +72,22 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 빠른 액션 (Phase 진행에 따라 실제 라우트로 연결) */}
+        {/* 빠른 액션 */}
         <section className="mt-6 px-4">
           <h2 className="mb-3 text-sm text-brand-700">빠른 메뉴</h2>
           <div className="grid grid-cols-2 gap-3">
             <QuickLink href="/requests/new" name="build" label="수리 요청" />
             <QuickLink href="/requests" name="list_alt" label="요청 목록" />
             <QuickLink href="/blog" name="auto_stories" label="청소 블로그" />
-            <QuickLink href="/login" name="login" label="로그인" />
+            {isSuper && (
+              <QuickLink href="/admin/users" name="admin_panel_settings" label="역할 관리" />
+            )}
+            {isManager && !isSuper && (
+              <QuickLink href="/dashboard" name="dashboard" label="관리자 홈" />
+            )}
           </div>
         </section>
 
-        {/* 안내 */}
-        <section className="mt-8 px-4 pb-24">
-          <div className="rounded-xl border border-brand-100 bg-white p-4">
-            <div className="flex items-start gap-3">
-              <Icon name="info" className="text-brand-500" />
-              <div>
-                <p className="text-base text-brand-900">
-                  현재는 Phase 0 미리보기입니다.
-                </p>
-                <p className="mt-1 text-sm text-brand-700">
-                  로그인·요청·블로그 기능은 단계적으로 활성화됩니다.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 하단 탭 자리표시자 */}
         <BottomTabPlaceholder />
       </main>
     </>
