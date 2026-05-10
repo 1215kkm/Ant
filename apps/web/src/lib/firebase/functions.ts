@@ -12,3 +12,19 @@ export const callSetUserRole = httpsCallable<SetUserRoleInput, { ok: true }>(
   functions,
   "setUserRole",
 );
+
+export type FindUserResult = {
+  uid: string;
+  email: string | null;
+  phoneNumber: string | null;
+  displayName: string | null;
+};
+export const callFindUserByContact = httpsCallable<
+  { email?: string; phoneNumber?: string },
+  FindUserResult
+>(functions, "findUserByContact");
+
+export const callLinkResident = httpsCallable<
+  { buildingId: string; residentId: string; uid: string },
+  { ok: true }
+>(functions, "linkResident");

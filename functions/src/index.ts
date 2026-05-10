@@ -20,3 +20,7 @@ export { onMembershipChanged } from "./triggers/onMembershipChanged";
 
 // Callable (Phase 1)
 export { setUserRole } from "./callable/setUserRole";
+
+// Callable (Phase 2)
+export { findUserByContact } from "./callable/findUserByContact";
+export { linkResident } from "./callable/linkResident";
