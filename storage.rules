@@ -1,0 +1,63 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function role() {
+      return request.auth.token.role;
+    }
+    function isManager() {
+      return isSignedIn() && (role() == 'cleaning_manager' || role() == 'super_manager');
+    }
+    function isSuper() {
+      return isSignedIn() && request.auth.token.sm == true;
+    }
+    function inBuilding(bid) {
+      return isSignedIn() && (isSuper() || (request.auth.token.bIds is list && bid in request.auth.token.bIds));
+    }
+    function imageOk() {
+      return request.resource.contentType.matches('image/.*')
+        && request.resource.size < 10 * 1024 * 1024;
+    }
+    function videoOk() {
+      return request.resource.contentType.matches('video/.*')
+        && request.resource.size < 100 * 1024 * 1024;
+    }
+
+    // ---------- request media ----------
+    match /requests/{bid}/{rid}/{allPaths=**} {
+      allow read: if inBuilding(bid);
+      allow write: if isSignedIn()
+        && inBuilding(bid)
+        && (imageOk() || videoOk())
+        && request.resource.metadata.uploaderUid == request.auth.uid;
+    }
+
+    // ---------- invoices ----------
+    match /invoices/{bid}/{iid}/{allPaths=**} {
+      allow read: if inBuilding(bid);
+      allow write: if isManager() && inBuilding(bid) && (imageOk() || request.resource.contentType == 'application/pdf');
+    }
+
+    // ---------- reports ----------
+    match /reports/{bid}/{reportId}/{allPaths=**} {
+      allow read: if inBuilding(bid);
+      allow write: if false; // Functions only
+    }
+
+    // ---------- blog posts (public read) ----------
+    match /posts/{postId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isManager() && imageOk();
+    }
+
+    // ---------- user avatars ----------
+    match /users/{userId}/{allPaths=**} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == userId && imageOk();
+    }
+  }
+}

@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --workspaces --include-workspace-root --if-present
+
+      - name: Typecheck (web)
+        run: npm --workspace apps/web run typecheck
+
+      - name: Typecheck (functions)
+        run: npm --workspace functions run build
+
+      - name: Lint (web)
+        run: npm --workspace apps/web run lint
+        continue-on-error: true

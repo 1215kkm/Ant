@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Material Symbols (Google icons) ---------- */
+/* @import "material-symbols/rounded.css"; -- 패키지 설치 후 활성화 */
+
+@layer base {
+  :root {
+    color-scheme: light;
+    /* 기본 폰트 크기 16px 명시 (시니어 가독성, Tailwind rem 기준) */
+    font-size: 16px;
+  }
+
+  html, body {
+    height: 100%;
+    background: #FFFFFF;
+    color: #0B1B2B;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: theme("fontFamily.sans");
+    font-size: 1rem; /* 16px */
+    line-height: 1.6;
+    /* iOS 안전 영역 */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* 인터랙션 영역 최소 44x44 */
+  button, [role="button"], a.button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* 사용자 줌 허용하되 폰트 boost는 차단 */
+  * {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+}
+
+@layer utilities {
+  /* 마스코트 둥둥 떠다니기 */
+  .ant-mascot-float {
+    animation: ant-float 3s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes ant-float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-6px) rotate(2deg); }
+  }
+
+  /* 부드러운 하늘 배경 */
+  .bg-sky-soft {
+    background: linear-gradient(180deg, #EFF8FF 0%, #DBEEFE 60%, #BFE0FD 100%);
+  }
+
+  /* 캐릭터 카드 배경 (밝은 하늘) */
+  .bg-character-card {
+    background: linear-gradient(160deg, #FFFFFF 0%, #EFF8FF 60%, #DBEEFE 100%);
+  }
+
+  /* 말풍선 꼬리 (왼쪽 아래) */
+  .speech-tail::after {
+    content: "";
+    position: absolute;
+    left: 28px;
+    bottom: -8px;
+    width: 18px;
+    height: 18px;
+    background: inherit;
+    transform: rotate(45deg);
+    border-bottom-right-radius: 4px;
+  }
+}
+
+@layer components {
+  .ms-icon {
+    font-family: "Material Symbols Rounded", "Material Symbols Outlined";
+    font-weight: normal;
+    font-style: normal;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: "liga";
+    font-feature-settings: "liga";
+    -webkit-font-smoothing: antialiased;
+    font-variation-settings:
+      "FILL" 0,
+      "wght" 400,
+      "GRAD" 0,
+      "opsz" 24;
+  }
+  .ms-icon[data-filled="true"] {
+    font-variation-settings:
+      "FILL" 1,
+      "wght" 500,
+      "GRAD" 0,
+      "opsz" 24;
+  }
+}
