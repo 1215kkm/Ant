@@ -97,10 +97,15 @@ function EmailForm() {
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [signupMode, setSignupMode] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (submitting) return;
+    if (signupMode && !agreed) {
+      toast.error("이용약관과 개인정보처리방침에 동의가 필요합니다.");
+      return;
+    }
     setSubmitting(true);
     try {
       if (signupMode) {
@@ -138,9 +143,10 @@ function EmailForm() {
         minLength={6}
         required
       />
+      {signupMode && <ConsentCheckbox checked={agreed} onChange={setAgreed} />}
       <button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || (signupMode && !agreed)}
         className="mt-2 inline-flex min-h-tap items-center justify-center rounded-xl bg-brand-500 px-4 py-3 text-base font-medium text-white shadow-sm transition active:bg-brand-600 disabled:opacity-50"
       >
         {submitting ? "처리 중…" : signupMode ? "가입하기" : "로그인"}
@@ -153,6 +159,36 @@ function EmailForm() {
         {signupMode ? "이미 계정이 있으신가요? 로그인" : "처음이신가요? 가입하기"}
       </button>
     </form>
+  );
+}
+
+function ConsentCheckbox({
+  checked,
+  onChange,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <label className="flex items-start gap-3 rounded-xl bg-brand-50 p-3 text-sm text-brand-900">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-5 w-5 accent-brand-500"
+        aria-label="약관 동의"
+      />
+      <span>
+        <a className="underline" href="/terms" target="_blank" rel="noopener noreferrer">
+          이용약관
+        </a>{" "}
+        및{" "}
+        <a className="underline" href="/privacy" target="_blank" rel="noopener noreferrer">
+          개인정보처리방침
+        </a>
+        에 동의합니다.
+      </span>
+    </label>
   );
 }
 
