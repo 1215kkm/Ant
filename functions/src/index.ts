@@ -22,6 +22,12 @@ export { onMembershipChanged } from "./triggers/onMembershipChanged";
 export { onRequestCreated } from "./triggers/onRequestCreated";
 export { onRequestStatusChanged } from "./triggers/onRequestStatusChanged";
 
+// Firestore triggers (Phase 6)
+export { onInvoiceCreated } from "./triggers/onInvoiceCreated";
+
+// Scheduled (Phase 6)
+export { invoiceReminderJob } from "./scheduled/invoiceReminderJob";
+
 // Callable (Phase 1)
 export { setUserRole } from "./callable/setUserRole";
 

@@ -139,6 +139,44 @@ export type ServiceRequest = {
   completedAt?: Timestamp;
 };
 
+export type InvoiceStatus = "issued" | "sent" | "partial" | "paid" | "overdue";
+
+export const INVOICE_STATUS_LABEL_KO: Record<InvoiceStatus, string> = {
+  issued: "발행",
+  sent: "발송됨",
+  partial: "일부납",
+  paid: "완납",
+  overdue: "연체",
+};
+
+export type InvoiceAttachment = {
+  kind: "pdf" | "image";
+  path: string;
+  url: string;
+  name?: string;
+};
+
+export type Invoice = {
+  id: string;
+  buildingId: string;
+  buildingName?: string;
+  /** YYYY-MM */
+  period: string;
+  amount: number;
+  currency: "KRW";
+  attachments: InvoiceAttachment[];
+  recipients: { ownerUids: string[] };
+  status: InvoiceStatus;
+  dueDate?: Timestamp;
+  sentAt?: Timestamp;
+  paidAt?: Timestamp;
+  remindersSent: number;
+  lastReminderAt?: Timestamp;
+  createdBy: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+};
+
 export type AppUser = {
   uid: string;
   email?: string | null;
