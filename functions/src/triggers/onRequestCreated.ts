@@ -8,6 +8,10 @@ import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "../services/admin";
 import { nextRequestNumber } from "../services/counters";
 import { notifyMany } from "../services/notify";
+import { sendFcmToUsers } from "../services/fcm";
+import { sendTelegramToUsers, TELEGRAM_BOT_TOKEN } from "../services/telegram";
+
+const APP_URL = process.env.APP_URL || "https://ant-cleaning.web.app";
 
 type RequestDoc = {
   type: "repair" | "inquiry";
@@ -34,7 +38,7 @@ type RequestDoc = {
  *  5) 모든 활성 관리자에게 인앱 알림 (FCM/텔레그램은 Phase 4에서 추가)
  */
 export const onRequestCreated = onDocumentCreated(
-  "requests/{rid}",
+  { document: "requests/{rid}", secrets: [TELEGRAM_BOT_TOKEN] },
   async (
     event: FirestoreEvent<
       QueryDocumentSnapshot | undefined,
@@ -97,18 +101,32 @@ export const onRequestCreated = onDocumentCreated(
       { merge: true },
     );
 
-    // 4) 인앱 알림 (관리자들)
+    // 4) 알림 (관리자들): 인앱 + FCM + 텔레그램
     if (managerIds.length > 0) {
-      await notifyMany(
-        managerIds.map((uid) => ({
-          kind: "request_created",
-          recipientUid: uid,
-          title: `새 ${req.type === "repair" ? "수리요청" : "문의"}`,
-          body: `${req.unitLabel ? req.unitLabel + " · " : ""}${req.title}`,
-          href: `/requests/${rid}`,
-          payload: { requestId: rid, requestNumber, buildingId: req.buildingId },
-        })),
-      );
+      const title = `새 ${req.type === "repair" ? "수리요청" : "문의"}`;
+      const body = `${req.unitLabel ? req.unitLabel + " · " : ""}${req.title}`;
+      const href = `/requests/${rid}`;
+
+      await Promise.allSettled([
+        notifyMany(
+          managerIds.map((uid) => ({
+            kind: "request_created",
+            recipientUid: uid,
+            title,
+            body,
+            href,
+            payload: { requestId: rid, requestNumber, buildingId: req.buildingId },
+          })),
+        ),
+        sendFcmToUsers(managerIds, {
+          title,
+          body,
+          href,
+          tag: `req-${rid}`,
+          data: { requestId: rid, requestNumber },
+        }),
+        sendTelegramToUsers(managerIds, { title, body, href, appUrl: APP_URL }),
+      ]);
     }
 
     logger.info("request created", {

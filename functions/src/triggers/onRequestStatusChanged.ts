@@ -8,6 +8,7 @@ import { logger } from "firebase-functions/v2";
 import { FieldValue } from "firebase-admin/firestore";
 import { adminDb } from "../services/admin";
 import { notifyInApp } from "../services/notify";
+import { sendFcmToUser } from "../services/fcm";
 
 type RequestDoc = {
   type: "repair" | "inquiry";
@@ -73,16 +74,28 @@ export const onRequestStatusChanged = onDocumentUpdated(
       }
     }
 
-    // 3) 거주자 인앱 알림
+    // 3) 거주자 알림 (인앱 + FCM)
     if (after.residentId) {
-      await notifyInApp({
-        kind: "request_status_changed",
-        recipientUid: after.residentId,
-        title: `요청 상태 변경: ${after.title}`,
-        body: `상태가 "${labelKo(after.status)}"(으)로 변경되었습니다.`,
-        href: `/requests/${rid}`,
-        payload: { requestId: rid, status: after.status },
-      });
+      const title = `요청 상태 변경: ${after.title}`;
+      const body = `상태가 "${labelKo(after.status)}"(으)로 변경되었습니다.`;
+      const href = `/requests/${rid}`;
+      await Promise.allSettled([
+        notifyInApp({
+          kind: "request_status_changed",
+          recipientUid: after.residentId,
+          title,
+          body,
+          href,
+          payload: { requestId: rid, status: after.status },
+        }),
+        sendFcmToUser(after.residentId, {
+          title,
+          body,
+          href,
+          tag: `req-${rid}`,
+          data: { requestId: rid, status: after.status },
+        }),
+      ]);
     }
 
     // 4) 건물 stats

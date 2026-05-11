@@ -21,22 +21,21 @@ const serwist = new Serwist({
 
 serwist.addEventListeners();
 
-// ---------- FCM 백그라운드 메시지 통합 (Phase 4에서 활성화) ----------
-// Firebase Messaging은 별도 SW를 요구하지만, Serwist 단일 SW에 통합하기 위해
-// importScripts로 firebase-messaging-compat을 로드한다.
-//
-// try {
-//   importScripts(
-//     "https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js",
-//     "https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"
-//   );
-//   // @ts-expect-error - global firebase from importScripts
-//   firebase.initializeApp({ /* runtime config */ });
-//   // @ts-expect-error
-//   const messaging = firebase.messaging();
-//   messaging.onBackgroundMessage((payload: unknown) => {
-//     // 알림 표시
-//   });
-// } catch (e) {
-//   console.warn("FCM SW init skipped", e);
-// }
+/**
+ * FCM은 별도 `/firebase-messaging-sw.js`(public/)에서 처리한다.
+ * Firebase SDK가 자동으로 그 경로를 찾아 등록한다.
+ * 단, 알림 클릭 핸들링은 이 SW(Serwist)도 같이 처리할 수 있도록 둔다.
+ */
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const data = event.notification.data as { href?: string } | undefined;
+  const href = data?.href || "/notifications";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      for (const c of clients) {
+        if (c.url.includes(href)) return c.focus();
+      }
+      return self.clients.openWindow(href);
+    }),
+  );
+});

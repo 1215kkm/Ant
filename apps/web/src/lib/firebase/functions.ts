@@ -28,3 +28,18 @@ export const callLinkResident = httpsCallable<
   { buildingId: string; residentId: string; uid: string },
   { ok: true }
 >(functions, "linkResident");
+
+export type TelegramLinkCode = {
+  code: string;
+  expiresAt: number;
+  botUsername?: string;
+};
+export const callRequestTelegramLinkCode = httpsCallable<undefined, TelegramLinkCode>(
+  functions,
+  "requestTelegramLinkCode",
+);
+
+export const callUnlinkTelegramAccount = httpsCallable<undefined, { ok: true }>(
+  functions,
+  "unlinkTelegramAccount",
+);

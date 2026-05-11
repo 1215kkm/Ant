@@ -28,3 +28,12 @@ export { setUserRole } from "./callable/setUserRole";
 // Callable (Phase 2)
 export { findUserByContact } from "./callable/findUserByContact";
 export { linkResident } from "./callable/linkResident";
+
+// Callable (Phase 4)
+export {
+  requestTelegramLinkCode,
+  unlinkTelegramAccount,
+} from "./callable/linkTelegramAccount";
+
+// HTTP (Phase 4)
+export { telegramWebhook } from "./http/telegramWebhook";

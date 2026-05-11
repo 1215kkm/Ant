@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build:fcm-sw": "node scripts/build-fcm-sw.mjs",
+    "build": "node scripts/build-fcm-sw.mjs && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
