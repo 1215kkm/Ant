@@ -31,6 +31,9 @@ export { invoiceReminderJob } from "./scheduled/invoiceReminderJob";
 // Scheduled (Phase 7)
 export { weeklyReportJob, monthlyReportJob } from "./scheduled/reportJobs";
 
+// Scheduled (Phase 9) — 매일 Firestore 백업을 GCS로 export
+export { firestoreBackupJob } from "./scheduled/firestoreBackup";
+
 // Callable (Phase 7)
 export { generateReportPdf } from "./callable/generateReportPdf";
 
