@@ -44,13 +44,14 @@ const config: Config = {
         ],
       },
       fontSize: {
-        // 기본 16px 기준, 위계 3단계만 사용 권장
-        xs: ["0.75rem", { lineHeight: "1.1rem" }],   // 12
-        sm: ["0.875rem", { lineHeight: "1.25rem" }], // 14
-        base: ["1rem", { lineHeight: "1.6rem" }],    // 16 (default)
-        lg: ["1.125rem", { lineHeight: "1.75rem" }], // 18
-        xl: ["1.25rem", { lineHeight: "1.875rem" }], // 20 (페이지 제목)
-        "2xl": ["1.5rem", { lineHeight: "2rem" }],   // 24 (큰 제목)
+        // 사용자 가독성 우선: 모든 단계 +3px
+        xs: ["0.9375rem", { lineHeight: "1.4rem" }],     // 15 (was 12)
+        sm: ["1.0625rem", { lineHeight: "1.5rem" }],     // 17 (was 14)
+        base: ["1.1875rem", { lineHeight: "1.75rem" }],  // 19 (was 16)
+        lg: ["1.3125rem", { lineHeight: "1.95rem" }],    // 21 (was 18)
+        xl: ["1.4375rem", { lineHeight: "2.1rem" }],     // 23 (was 20)
+        "2xl": ["1.6875rem", { lineHeight: "2.25rem" }], // 27 (was 24)
+        "3xl": ["2rem", { lineHeight: "2.5rem" }],       // 32 hero
       },
       spacing: {
         "safe-top": "env(safe-area-inset-top)",

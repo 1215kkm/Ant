@@ -43,6 +43,41 @@
   }
 }
 
+@layer utilities {
+  /* 마스코트 둥둥 떠다니기 */
+  .ant-mascot-float {
+    animation: ant-float 3s ease-in-out infinite;
+    transform-origin: center;
+  }
+  @keyframes ant-float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-6px) rotate(2deg); }
+  }
+
+  /* 부드러운 하늘 배경 */
+  .bg-sky-soft {
+    background: linear-gradient(180deg, #EFF8FF 0%, #DBEEFE 60%, #BFE0FD 100%);
+  }
+
+  /* 캐릭터 카드 배경 (밝은 하늘) */
+  .bg-character-card {
+    background: linear-gradient(160deg, #FFFFFF 0%, #EFF8FF 60%, #DBEEFE 100%);
+  }
+
+  /* 말풍선 꼬리 (왼쪽 아래) */
+  .speech-tail::after {
+    content: "";
+    position: absolute;
+    left: 28px;
+    bottom: -8px;
+    width: 18px;
+    height: 18px;
+    background: inherit;
+    transform: rotate(45deg);
+    border-bottom-right-radius: 4px;
+  }
+}
+
 @layer components {
   .ms-icon {
     font-family: "Material Symbols Rounded", "Material Symbols Outlined";
