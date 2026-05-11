@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { use } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
 import {
   getBuilding,
@@ -287,18 +288,22 @@ function ResidentsTab({
       ) : (
         <ul className="flex flex-col gap-2">
           {residents.map((r) => (
-            <li
-              key={r.id}
-              className="flex items-center gap-3 rounded-xl border border-brand-100 bg-white p-3"
-            >
-              <Icon name="person" className="text-brand-500" />
-              <div className="flex-1">
-                <p className="text-base text-brand-900">{r.name}</p>
-                <p className="text-sm text-brand-700">
-                  {r.unitLabel ? `${r.unitLabel} · ` : ""}
-                  {r.phoneNumber || "—"}
-                </p>
-              </div>
+            <li key={r.id}>
+              <Link
+                href={`/buildings/${bid}/residents/${r.id}`}
+                className="flex items-center gap-3 rounded-xl border border-brand-100 bg-white p-3 active:bg-brand-50"
+              >
+                <Icon name="person" className="text-brand-500" />
+                <div className="flex-1">
+                  <p className="text-base text-brand-900">{r.name}</p>
+                  <p className="text-sm text-brand-700">
+                    {r.unitLabel ? `${r.unitLabel} · ` : ""}
+                    {r.phoneNumber || "—"}
+                    {r.stats?.total ? ` · 요청 ${r.stats.total}회` : ""}
+                  </p>
+                </div>
+                <Icon name="chevron_right" className="text-brand-400" />
+              </Link>
             </li>
           ))}
         </ul>
