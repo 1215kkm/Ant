@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "ant-cleaning-dev",
-    "production": "ant-cleaning-prod"
+    "default": "ant-cleaning"
   }
 }
