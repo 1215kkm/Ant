@@ -206,6 +206,38 @@ export type Report = {
   generatedBy: "system" | string;
 };
 
+export type BlogImage = {
+  path: string;
+  url: string;
+  width?: number;
+  height?: number;
+};
+
+export type BeforeAfter = {
+  before: BlogImage;
+  after: BlogImage;
+  caption?: string;
+};
+
+export type BlogPost = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt?: string;
+  body: string;
+  heroImage?: BlogImage;
+  beforeAfter: BeforeAfter[];
+  tags: string[];
+  buildingId?: string;
+  authorId: string;
+  authorName?: string;
+  published: boolean;
+  publishedAt?: Timestamp;
+  viewCount?: number;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
+};
+
 export type AppUser = {
   uid: string;
   email?: string | null;
