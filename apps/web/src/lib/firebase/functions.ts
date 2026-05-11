@@ -43,3 +43,14 @@ export const callUnlinkTelegramAccount = httpsCallable<undefined, { ok: true }>(
   functions,
   "unlinkTelegramAccount",
 );
+
+export type GenerateReportInput = {
+  buildingId: string;
+  kind: "weekly" | "monthly";
+  periodStart: string;
+  periodEnd: string;
+};
+export const callGenerateReportPdf = httpsCallable<
+  GenerateReportInput,
+  { ok: true; reportId: string }
+>(functions, "generateReportPdf");

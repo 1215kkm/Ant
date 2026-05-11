@@ -28,6 +28,12 @@ export { onInvoiceCreated } from "./triggers/onInvoiceCreated";
 // Scheduled (Phase 6)
 export { invoiceReminderJob } from "./scheduled/invoiceReminderJob";
 
+// Scheduled (Phase 7)
+export { weeklyReportJob, monthlyReportJob } from "./scheduled/reportJobs";
+
+// Callable (Phase 7)
+export { generateReportPdf } from "./callable/generateReportPdf";
+
 // Callable (Phase 1)
 export { setUserRole } from "./callable/setUserRole";
 

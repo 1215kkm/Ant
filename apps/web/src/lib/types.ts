@@ -177,6 +177,35 @@ export type Invoice = {
   updatedAt?: Timestamp;
 };
 
+export type ReportKind = "weekly" | "monthly";
+
+export type ReportSummary = {
+  totalRequests: number;
+  completed: number;
+  pending: number;
+  byCategory?: Record<string, number>;
+  byStatus?: Record<string, number>;
+  invoicesIssued?: number;
+  invoicesPaid?: number;
+  invoicesOverdue?: number;
+};
+
+export type Report = {
+  id: string;
+  buildingId: string;
+  buildingName?: string;
+  kind: ReportKind;
+  periodStart: Timestamp;
+  periodEnd: Timestamp;
+  summary: ReportSummary;
+  pdfPath?: string;
+  pdfUrl?: string;
+  emailedAt?: Timestamp;
+  telegramSentAt?: Timestamp;
+  generatedAt?: Timestamp;
+  generatedBy: "system" | string;
+};
+
 export type AppUser = {
   uid: string;
   email?: string | null;
