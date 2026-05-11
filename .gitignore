@@ -8,6 +8,11 @@ node_modules/
 out/
 build/
 dist/
+*.tsbuildinfo
+
+# serwist (PWA service worker build artifacts)
+apps/web/public/sw.js
+apps/web/public/swe-worker-*.js
 
 # misc
 .DS_Store

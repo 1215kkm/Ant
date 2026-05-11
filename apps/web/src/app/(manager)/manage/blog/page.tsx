@@ -25,7 +25,7 @@ export default function ManagerBlogListPage() {
         back={false}
         action={
           <Link
-            href="/blog/new"
+            href="/manage/blog/new"
             className="inline-flex min-h-tap items-center gap-1 rounded-lg bg-brand-500 px-3 py-2 text-sm text-white"
           >
             <Icon name="add" size={20} />
@@ -43,7 +43,7 @@ export default function ManagerBlogListPage() {
           {posts.map((p) => (
             <li key={p.id}>
               <Link
-                href={`/blog/edit/${p.id}`}
+                href={`/manage/blog/edit/${p.id}`}
                 className="flex items-center gap-3 rounded-xl border border-brand-100 bg-white p-4 active:bg-brand-50"
               >
                 <Icon

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   RecaptchaVerifier,
@@ -45,7 +45,9 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-6">
-        {mode === "email" ? <EmailForm /> : <PhoneForm />}
+        <Suspense fallback={<p className="text-sm text-brand-700">불러오는 중…</p>}>
+          {mode === "email" ? <EmailForm /> : <PhoneForm />}
+        </Suspense>
       </div>
 
       <p className="mt-8 text-center text-sm text-brand-700">

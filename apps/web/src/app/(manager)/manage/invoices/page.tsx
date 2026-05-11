@@ -45,7 +45,7 @@ export default function ManagerInvoicesPage() {
         action={
           selectedBid ? (
             <Link
-              href={`/invoices/new?bid=${selectedBid}`}
+              href={`/manage/invoices/new?bid=${selectedBid}`}
               className="inline-flex min-h-tap items-center gap-1 rounded-lg bg-brand-500 px-3 py-2 text-sm text-white"
             >
               <Icon name="add" size={20} />
@@ -80,7 +80,7 @@ export default function ManagerInvoicesPage() {
           {invoices.map((inv) => (
             <li key={inv.id}>
               <Link
-                href={`/invoices/${inv.id}`}
+                href={`/manage/invoices/${inv.id}`}
                 className="flex items-center gap-3 rounded-xl border border-brand-100 bg-white p-4 active:bg-brand-50"
               >
                 <div className="flex-1">

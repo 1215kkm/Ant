@@ -99,7 +99,7 @@ export function PostEditor({ initial }: Props) {
           authorId: user.uid,
         });
         toast.success("저장되었습니다.");
-        router.replace("/blog");
+        router.replace("/manage/blog");
       } else {
         const id = await createPost({
           slug,
@@ -114,7 +114,7 @@ export function PostEditor({ initial }: Props) {
           publish,
         });
         toast.success(publish ? "글이 공개되었습니다." : "임시저장되었습니다.");
-        router.replace(`/blog/edit/${id}`);
+        router.replace(`/manage/blog/edit/${id}`);
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "저장 실패");
@@ -128,7 +128,7 @@ export function PostEditor({ initial }: Props) {
     if (!confirm("이 글을 삭제하시겠습니까?")) return;
     await deletePost(initial.id);
     toast.success("삭제되었습니다.");
-    router.replace("/blog");
+    router.replace("/manage/blog");
   }
 
   return (
@@ -284,7 +284,7 @@ function BeforeAfterPicker({
               className="flex items-center gap-2 rounded-xl border border-brand-100 bg-white p-2"
             >
               <img src={ba.before.url} alt="" className="h-12 w-12 rounded object-cover" />
-              <Icon name="east" size={16} className="text-brand-400" />
+              <Icon name="east" size={18} className="text-brand-400" />
               <img src={ba.after.url} alt="" className="h-12 w-12 rounded object-cover" />
               <span className="flex-1 text-sm text-brand-700">{ba.caption || "—"}</span>
               <button

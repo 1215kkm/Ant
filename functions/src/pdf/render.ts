@@ -1,5 +1,5 @@
 import React from "react";
-import { renderToBuffer } from "@react-pdf/renderer";
+import { renderToBuffer, type DocumentProps } from "@react-pdf/renderer";
 import { getStorage } from "firebase-admin/storage";
 import { logger } from "firebase-functions/v2";
 import { ReportTemplate, type ReportTemplateProps } from "./reportTemplate";
@@ -18,7 +18,7 @@ export async function renderAndUploadReport(
   props: ReportTemplateProps,
 ): Promise<RenderedReport> {
   const buffer = await renderToBuffer(
-    React.createElement(ReportTemplate, props),
+    React.createElement(ReportTemplate, props) as React.ReactElement<DocumentProps>,
   );
   const path = `reports/${buildingId}/${reportId}.pdf`;
   const bucket = getStorage().bucket();

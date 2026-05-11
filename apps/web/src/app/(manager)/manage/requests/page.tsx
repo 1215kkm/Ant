@@ -79,7 +79,7 @@ export default function ManagerRequestsPage() {
           {items.map((r) => (
             <li key={r.id}>
               <Link
-                href={`/requests/${r.id}`}
+                href={`/manage/requests/${r.id}`}
                 className="flex items-start gap-3 rounded-xl border border-brand-100 bg-white p-4 active:bg-brand-50"
               >
                 <div className="flex-1">

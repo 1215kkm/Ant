@@ -33,8 +33,9 @@ export default function ManagerDashboardPage() {
         <h2 className="mb-3 text-sm text-brand-700">빠른 메뉴</h2>
         <div className="grid grid-cols-2 gap-3">
           <Tile href="/buildings" name="apartment" label="건물 관리" />
-          <Tile href="/requests" name="list_alt" label="요청 목록" />
-          <Tile href="/blog/new" name="edit_note" label="블로그 작성" />
+          <Tile href="/manage/requests" name="list_alt" label="요청 목록" />
+          <Tile href="/manage/blog/new" name="edit_note" label="블로그 작성" />
+          <Tile href="/manage/invoices" name="receipt_long" label="관리비" />
           {isSuper && <Tile href="/admin/users" name="admin_panel_settings" label="역할 관리" />}
         </div>
       </section>

@@ -105,7 +105,7 @@ export const onRequestCreated = onDocumentCreated(
     if (managerIds.length > 0) {
       const title = `새 ${req.type === "repair" ? "수리요청" : "문의"}`;
       const body = `${req.unitLabel ? req.unitLabel + " · " : ""}${req.title}`;
-      const href = `/requests/${rid}`;
+      const href = `/manage/requests/${rid}`;
 
       await Promise.allSettled([
         notifyMany(
