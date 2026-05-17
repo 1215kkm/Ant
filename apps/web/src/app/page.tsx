@@ -52,7 +52,12 @@ export default function HomePage() {
           </p>
         </section>
 
-        <TodaySection isManager={isManager} />
+        <TodaySection
+          isManager={isManager}
+          isSuper={isSuper}
+          role={claims?.role}
+          uid={user?.uid}
+        />
 
         <QuickActions isSuper={isSuper} isManager={isManager} />
 
@@ -190,17 +195,40 @@ function StatTile({
   );
 }
 
-function TodaySection({ isManager }: { isManager: boolean }) {
+function TodaySection({
+  isManager,
+  isSuper,
+  role,
+  uid,
+}: {
+  isManager: boolean;
+  isSuper: boolean;
+  role?: string;
+  uid?: string;
+}) {
   const [openCount, setOpenCount] = useState<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      try {
-        const q = query(
+      const active = ["open", "in_progress", "scheduled"];
+      // Firestore 보안 규칙상 거주자는 본인 요청만, 슈퍼관리자는 전체를 읽을 수 있다.
+      // 권한이 없는 광범위 집계는 403을 유발하므로 역할별로 쿼리를 한정한다.
+      let q;
+      if (role === "resident" && uid) {
+        q = query(
           collection(db, "requests"),
-          where("status", "in", ["open", "in_progress", "scheduled"]),
+          where("residentUid", "==", uid),
+          where("status", "in", active),
         );
+      } else if (isSuper) {
+        q = query(collection(db, "requests"), where("status", "in", active));
+      } else {
+        // 비-슈퍼 관리자/건물주: 건물 범위 집계는 대시보드에서 제공한다.
+        if (!cancelled) setOpenCount(null);
+        return;
+      }
+      try {
         const snap = await getCountFromServer(q);
         if (!cancelled) setOpenCount(snap.data().count);
       } catch {
@@ -210,7 +238,7 @@ function TodaySection({ isManager }: { isManager: boolean }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [role, uid, isSuper]);
 
   return (
     <section className="mt-6 px-4">

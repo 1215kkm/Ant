@@ -1,8 +1,8 @@
 import { getApp, getApps, initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { connectAuthEmulator, getAuth } from "firebase/auth";
+import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
+import { connectStorageEmulator, getStorage } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -42,3 +42,17 @@ if (typeof window !== "undefined") {
 export const auth = getAuth(firebaseApp);
 export const db = getFirestore(firebaseApp);
 export const storage = getStorage(firebaseApp);
+
+// 로컬 개발: Firebase 에뮬레이터에 연결.
+// NEXT_PUBLIC_FIREBASE_USE_EMULATOR=true 일 때만 동작하며,
+// HMR/중복 실행 시 재연결 오류가 나지 않도록 1회만 연결한다.
+if (process.env.NEXT_PUBLIC_FIREBASE_USE_EMULATOR === "true") {
+  const g = globalThis as unknown as { __ANT_EMULATORS_CONNECTED__?: boolean };
+  if (!g.__ANT_EMULATORS_CONNECTED__) {
+    g.__ANT_EMULATORS_CONNECTED__ = true;
+    const host = "127.0.0.1";
+    connectAuthEmulator(auth, `http://${host}:9099`, { disableWarnings: true });
+    connectFirestoreEmulator(db, host, 8080);
+    connectStorageEmulator(storage, host, 9199);
+  }
+}

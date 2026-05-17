@@ -22,7 +22,7 @@
       "collectionGroup": "requests",
       "queryScope": "COLLECTION",
       "fields": [
-        { "fieldPath": "residentId", "order": "ASCENDING" },
+        { "fieldPath": "residentUid", "order": "ASCENDING" },
         { "fieldPath": "createdAt", "order": "DESCENDING" }
       ]
     },
@@ -40,6 +40,22 @@
       "fields": [
         { "fieldPath": "status", "order": "ASCENDING" },
         { "fieldPath": "dueDate", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "invoices",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "recipients.ownerUids", "arrayConfig": "CONTAINS" },
+        { "fieldPath": "period", "order": "DESCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "reports",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "buildingId", "order": "ASCENDING" },
+        { "fieldPath": "periodStart", "order": "DESCENDING" }
       ]
     },
     {

@@ -33,7 +33,14 @@ service cloud.firestore {
 
     // ---------- buildings ----------
     match /buildings/{bid} {
-      allow read: if isSignedIn() && (isSuper() || inBuilding(bid));
+      // list 쿼리는 규칙이 문서 데이터를 볼 수 없으므로(규칙은 필터가 아님)
+      // 쿼리로 증명 가능한 필드(managerIds/ownerIds array-contains)로 허용한다.
+      allow read: if isSignedIn() && (
+        isSuper() ||
+        inBuilding(bid) ||
+        (isManager() && uid() in resource.data.managerIds) ||
+        (role() == 'building_owner' && uid() in resource.data.ownerIds)
+      );
       allow write: if isSuper();
 
       match /units/{unitId} {
@@ -60,12 +67,15 @@ service cloud.firestore {
     match /requests/{requestId} {
       allow create: if isSignedIn()
         && role() == 'resident'
-        && request.resource.data.residentId == uid()
+        && request.resource.data.residentUid == uid()
         && inBuilding(request.resource.data.buildingId);
 
+      // 슈퍼관리자는 전체 열람(쿼리 증명 가능, 다른 컬렉션과 일관).
+      // 매니저 목록 쿼리는 managerIds array-contains 로 거른다 → 규칙도 동일 필드로 증명.
       allow read: if isSignedIn() && (
-        (role() == 'resident' && resource.data.residentId == uid()) ||
-        (isManager() && inBuilding(resource.data.buildingId)) ||
+        isSuper() ||
+        (role() == 'resident' && resource.data.residentUid == uid()) ||
+        (isManager() && uid() in resource.data.managerIds) ||
         (role() == 'building_owner' && inBuilding(resource.data.buildingId))
       );
 
@@ -78,7 +88,8 @@ service cloud.firestore {
 
       match /events/{eventId} {
         allow read: if isSignedIn() && (
-          (role() == 'resident' && get(/databases/$(database)/documents/requests/$(requestId)).data.residentId == uid()) ||
+          isSuper() ||
+          (role() == 'resident' && get(/databases/$(database)/documents/requests/$(requestId)).data.residentUid == uid()) ||
           (isManager() && inBuilding(get(/databases/$(database)/documents/requests/$(requestId)).data.buildingId))
         );
         allow write: if false; // Functions only
@@ -87,10 +98,11 @@ service cloud.firestore {
 
     // ---------- invoices ----------
     match /invoices/{invoiceId} {
+      // 소유주 목록 쿼리는 recipients.ownerUids array-contains 로 거른다 → 동일 필드로 증명.
       allow read: if isSignedIn() && (
         isSuper() ||
         (isManager() && inBuilding(resource.data.buildingId)) ||
-        (role() == 'building_owner' && inBuilding(resource.data.buildingId))
+        (role() == 'building_owner' && uid() in resource.data.recipients.ownerUids)
       );
       allow create, update: if isManager() && inBuilding(request.resource.data.buildingId);
       allow delete: if isSuper();
