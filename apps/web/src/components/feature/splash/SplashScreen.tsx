@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AntMascot } from "@/components/feature/character/AntMascot";
 
 type SplashScreenProps = {
   onDone?: () => void;
@@ -56,13 +55,13 @@ export function SplashScreen({ onDone, oncePerSession = true }: SplashScreenProp
 
   return (
     <div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-sky-soft transition-opacity"
+      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white transition-opacity"
       role="status"
       aria-label="개미청소 로딩"
       style={{ opacity: leaving ? 0 : 1, transitionDuration: `${FADE_MS}ms` }}
     >
-      <AntMascot size={240} />
-      <p className="mt-6 text-2xl font-semibold text-brand-900">개미청소</p>
+      <p className="text-3xl font-bold tracking-tight text-brand-500">개미청소</p>
+      <p className="mt-3 text-base text-brand-700">깨끗한 건물 관리</p>
     </div>
   );
 }
