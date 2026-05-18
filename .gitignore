@@ -38,6 +38,11 @@ firebase-debug.log
 firestore-debug.log
 ui-debug.log
 
+# service account keys — NEVER commit
+serviceAccountKey.json
+*serviceaccount*.json
+*-adminsdk-*.json
+
 # functions
 functions/lib/
 functions/node_modules/

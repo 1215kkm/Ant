@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Administrator\\\\km-Ant\\\\Ant\\\\functions\\\\src\" -Recurse)",
+      "Bash(Select-Object FullName)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Administrator\\\\km-Ant\\\\Ant\\\\apps\\\\web\\\\src\" -Recurse -Directory)",
+      "Bash(firebase --version)",
+      "Bash(firebase login:list)",
+      "Bash(npm install *)",
+      "Bash(npx firebase *)",
+      "Bash(npm run *)",
+      "Bash(git check-ignore *)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(node *)",
+      "Bash(firebase use *)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(npm *)",
+      "PowerShell(gcloud secrets list *)",
+      "PowerShell(npx --no-install firebase functions:secrets:get TELEGRAM_BOT_TOKEN 2>&1 | Out-String)",
+      "PowerShell(try { $r = Invoke-RestMethod -Uri \"https://api.telegram.org/bot8763470828:AAGHDXYU_u9YvHUMi2cjHpLhcVF1dwkj400/getMe\" -TimeoutSec 20; \"ok=$\\($r.ok\\)\"; \"id=$\\($r.result.id\\)\"; \"username=$\\($r.result.username\\)\"; \"name=$\\($r.result.first_name\\)\" } catch { \"ERROR: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(npx --no-install firebase functions:secrets:set --help 2>&1 | Out-String)",
+      "PowerShell(Join-Path *)",
+      "PowerShell($env:CI=\"true\"; npx --no-install firebase deploy --force --only \"firestore:rules,firestore:indexes,functions:healthcheck,functions:onUserCreated,functions:onMembershipChanged,functions:onRequestCreated,functions:onRequestStatusChanged,functions:onInvoiceCreated,functions:invoiceReminderJob,functions:weeklyReportJob,functions:monthlyReportJob,functions:setUserRole,functions:findUserByContact,functions:linkResident,functions:requestTelegramLinkCode,functions:unlinkTelegramAccount,functions:telegramWebhook\" 2>&1 | Out-String)"
+    ]
+  }
+}
