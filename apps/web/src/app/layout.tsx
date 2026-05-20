@@ -27,7 +27,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#2E9CF2",
+  // Crowny 메인 보라 (design-system.md)
+  themeColor: "#6C3CE1",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -42,20 +43,25 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <head>
-        {/* Pretendard Variable — self-host 권장이지만 우선 CDN으로 시작 */}
+        {/* Noto Sans KR — design-system.md 기본 폰트 (1순위) */}
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap"
+        />
+        {/* Pretendard Variable — 점진적 마이그레이션 fallback (2순위) */}
         <link
           rel="stylesheet"
           as="style"
           crossOrigin="anonymous"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
         />
-        {/* Material Symbols Rounded (variable font) */}
+        {/* Material Symbols Rounded (variable font) — 아이콘 폰트 통일은 다음 turn */}
         <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,300..700,0..1,-25..200&display=swap"
         />
       </head>
-      <body className="bg-white text-[#0B1B2B] antialiased">
+      <body className="bg-white text-[#1E1B4B] antialiased">
         <AuthProvider>{children}</AuthProvider>
         <Toaster richColors position="top-center" />
       </body>

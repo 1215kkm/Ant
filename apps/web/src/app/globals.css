@@ -15,7 +15,8 @@
   html, body {
     height: 100%;
     background: #FFFFFF;
-    color: #0B1B2B;
+    /* design-system.md text-primary */
+    color: #1E1B4B;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -54,14 +55,15 @@
     50% { transform: translateY(-6px) rotate(2deg); }
   }
 
-  /* 부드러운 하늘 배경 */
+  /* 메인 배경 그라데이션 — design-system.md 165deg / #5B2FD6 → #7C4DFF → #9B72FF
+     클래스명은 점진적 마이그레이션 위해 .bg-sky-soft 유지 (다음 turn에서 .bg-purple-main 등으로 리네임 검토) */
   .bg-sky-soft {
-    background: linear-gradient(180deg, #EFF8FF 0%, #DBEEFE 60%, #BFE0FD 100%);
+    background: linear-gradient(165deg, #5B2FD6 0%, #7C4DFF 60%, #9B72FF 100%);
   }
 
-  /* 캐릭터 카드 배경 (밝은 하늘) */
+  /* 캐릭터 카드 배경 — design-system.md 카드 배경 #F9F7FF 연보라 베이스 */
   .bg-character-card {
-    background: linear-gradient(160deg, #FFFFFF 0%, #EFF8FF 60%, #DBEEFE 100%);
+    background: linear-gradient(160deg, #FFFFFF 0%, #F9F7FF 60%, #F3F0FF 100%);
   }
 
   /* 말풍선 꼬리 (왼쪽 아래) */
@@ -79,6 +81,8 @@
 }
 
 @layer components {
+  /* NOTE: design-system.md 는 'Material Icons Round' (CDN) 를 명시.
+     현재는 Material Symbols Rounded 를 사용 — 아이콘 폰트 통일은 다음 turn 에서 결정. */
   .ms-icon {
     font-family: "Material Symbols Rounded", "Material Symbols Outlined";
     font-weight: normal;
