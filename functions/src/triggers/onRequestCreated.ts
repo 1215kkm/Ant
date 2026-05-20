@@ -18,7 +18,10 @@ type RequestDoc = {
   buildingId: string;
   unitId?: string | null;
   unitLabel?: string | null;
+  /** 거주자 문서 ID — stats 집계 경로용 */
   residentId: string;
+  /** 거주자 Firebase Auth UID — 소유권/알림용 */
+  residentUid?: string;
   residentName?: string | null;
   category?: string | null;
   status: string;

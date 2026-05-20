@@ -55,3 +55,11 @@ test-results/
 # turbo / cache
 .turbo/
 .cache/
+
+# 로컬 포터블 Node (커밋 제외)
+.tools/
+apps/web/build.log
+
+# E2E 생성물 (시드 결과/스크린샷 — 커밋 제외)
+apps/web/e2e/seed-output.json
+apps/web/e2e/*.png

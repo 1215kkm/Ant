@@ -127,7 +127,10 @@ export type ServiceRequest = {
   buildingId: string;
   unitId?: string;
   unitLabel?: string;
+  /** 거주자 문서 ID (buildings/{bid}/residents/{residentId}). 통계 집계용. */
   residentId: string;
+  /** 요청 소유자(거주자)의 Firebase Auth UID. 보안 규칙·내 요청 조회·알림용. */
+  residentUid: string;
   residentName?: string;
   managerIds: string[];
   status: RequestStatus;

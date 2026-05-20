@@ -30,6 +30,10 @@ firebase.json          Firebase 설정
 
 ## 개발
 
+> **Node 버전: 20.x 또는 22.x 필수.** Node 23+ (특히 24)는 Next.js 15.5 SWC 컴파일러가
+> 네이티브 크래시(`STATUS_STACK_BUFFER_OVERRUN`)를 일으켜 빌드가 실패한다.
+> `.nvmrc`(=20) 참고. Firebase 에뮬레이터 실행에는 JDK 11+ 도 필요하다.
+
 ```bash
 # 1) 워크스페이스 의존성 설치
 npm install

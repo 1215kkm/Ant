@@ -3,6 +3,9 @@ import { listPublishedPosts } from "@/lib/queries/posts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://ant-cleaning.web.app";
 
+// 요청 시점에 생성한다. 빌드 타임에 Firebase 미설정 상태로 실행되어
+// 페이지 데이터 수집이 실패하는 것을 방지한다.
+export const dynamic = "force-dynamic";
 export const revalidate = 3600; // 1시간
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
