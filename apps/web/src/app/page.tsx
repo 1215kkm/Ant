@@ -78,20 +78,27 @@ function Header({
   loading: boolean;
   onSignOut: () => void | Promise<void>;
 }) {
-  const today = new Intl.DateTimeFormat("ko-KR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    weekday: "short",
-  }).format(new Date());
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
-  const greeting = (() => {
-    const h = new Date().getHours();
-    if (h < 6) return "좋은 새벽이에요";
-    if (h < 12) return "좋은 아침이에요";
-    if (h < 18) return "좋은 오후예요";
-    return "좋은 저녁이에요";
-  })();
+  const today = mounted
+    ? new Intl.DateTimeFormat("ko-KR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        weekday: "short",
+      }).format(new Date())
+    : "";
+
+  const greeting = mounted
+    ? (() => {
+        const h = new Date().getHours();
+        if (h < 6) return "좋은 새벽이에요";
+        if (h < 12) return "좋은 아침이에요";
+        if (h < 18) return "좋은 오후예요";
+        return "좋은 저녁이에요";
+      })()
+    : "";
 
   return (
     <header className="flex items-start justify-between px-5 pb-2 pt-6">
@@ -211,7 +218,7 @@ function TodaySection({
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const active = ["open", "in_progress", "scheduled"];
+      const active = ["received", "confirmed", "in_progress"];
       // Firestore 보안 규칙상 거주자는 본인 요청만, 슈퍼관리자는 전체를 읽을 수 있다.
       // 권한이 없는 광범위 집계는 403을 유발하므로 역할별로 쿼리를 한정한다.
       let q;
