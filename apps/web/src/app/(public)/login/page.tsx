@@ -20,7 +20,14 @@ export default function LoginPage() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-screen-sm flex-col bg-white px-4 pt-8 pb-12">
+      {/*
+        위치 결정: 헤더 좌측 IconButton (옵션 A).
+        근거: PageHeader/terms/privacy와 동일 컨벤션 유지 — 보호 라우트에서
+        리다이렉트된 사용자가 "익숙한 위치"에서 탈출구를 찾도록.
+        별도 줄(옵션 B)은 시각 위계를 한 단계 더 만들어 헤더를 분산시킴.
+      */}
       <div className="flex items-center gap-3">
+        <BackButton />
         <img src="/brand/ant-clean-logo.svg" alt="" className="h-10 w-10" />
         <h1 className="text-xl font-semibold text-brand-900">로그인</h1>
       </div>
@@ -58,6 +65,32 @@ export default function LoginPage() {
       {/* invisible reCAPTCHA 컨테이너 (휴대폰 인증용) */}
       <div id="recaptcha-container" />
     </main>
+  );
+}
+
+/**
+ * 로그인 헤더의 뒤로 가기 버튼.
+ * - history가 있으면 router.back(), 없으면 홈("/")으로 fallback.
+ * - SSR 안전: window 접근은 onClick 내부에서만.
+ * - 디자인 토큰: PageHeader와 동일 (min-h-tap min-w-tap, rounded-lg, text-brand-700, -ml-2).
+ */
+function BackButton() {
+  const router = useRouter();
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        if (typeof window !== "undefined" && window.history.length > 1) {
+          router.back();
+        } else {
+          router.replace("/");
+        }
+      }}
+      className="-ml-2 inline-flex min-h-tap min-w-tap items-center justify-center rounded-lg text-brand-700 transition active:bg-brand-50"
+      aria-label="뒤로 가기"
+    >
+      <Icon name="arrow_back" />
+    </button>
   );
 }
 
