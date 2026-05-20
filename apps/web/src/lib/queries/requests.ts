@@ -51,6 +51,7 @@ export async function createRequest(
     unitId: input.unitId ?? null,
     unitLabel: input.unitLabel ?? null,
     residentId: input.residentId,
+    residentUid: uid,
     residentName: input.residentName ?? null,
     category: input.category ?? null,
     priority: input.priority ?? "normal",
@@ -71,7 +72,7 @@ export async function getRequest(id: string): Promise<ServiceRequest | null> {
 
 export async function listMyRequests(uid: string): Promise<ServiceRequest[]> {
   const snap = await getDocs(
-    query(requestsCol, where("residentId", "==", uid), orderBy("createdAt", "desc"), limit(50)),
+    query(requestsCol, where("residentUid", "==", uid), orderBy("createdAt", "desc"), limit(50)),
   );
   return snap.docs.map((d) => ({ id: d.id, ...(d.data() as Omit<ServiceRequest, "id">) }));
 }

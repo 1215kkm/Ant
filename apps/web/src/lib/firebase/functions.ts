@@ -1,7 +1,15 @@
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { connectFunctionsEmulator, getFunctions, httpsCallable } from "firebase/functions";
 import { firebaseApp } from "./client";
 
 const functions = getFunctions(firebaseApp, "asia-northeast3");
+
+if (process.env.NEXT_PUBLIC_FIREBASE_USE_EMULATOR === "true") {
+  const g = globalThis as unknown as { __ANT_FN_EMULATOR_CONNECTED__?: boolean };
+  if (!g.__ANT_FN_EMULATOR_CONNECTED__) {
+    g.__ANT_FN_EMULATOR_CONNECTED__ = true;
+    connectFunctionsEmulator(functions, "127.0.0.1", 5001);
+  }
+}
 
 export type SetUserRoleInput = {
   uid: string;

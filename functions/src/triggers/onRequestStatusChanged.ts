@@ -13,7 +13,10 @@ import { sendFcmToUser } from "../services/fcm";
 type RequestDoc = {
   type: "repair" | "inquiry";
   buildingId: string;
+  /** 거주자 문서 ID — stats 집계 경로용 */
   residentId: string;
+  /** 거주자 Firebase Auth UID — 알림 수신자용 */
+  residentUid?: string;
   unitLabel?: string | null;
   status: string;
   title: string;
@@ -74,21 +77,21 @@ export const onRequestStatusChanged = onDocumentUpdated(
       }
     }
 
-    // 3) 거주자 알림 (인앱 + FCM)
-    if (after.residentId) {
+    // 3) 거주자 알림 (인앱 + FCM) — 수신자는 거주자 문서 ID가 아닌 사용자 UID
+    if (after.residentUid) {
       const title = `요청 상태 변경: ${after.title}`;
       const body = `상태가 "${labelKo(after.status)}"(으)로 변경되었습니다.`;
       const href = `/requests/${rid}`;
       await Promise.allSettled([
         notifyInApp({
           kind: "request_status_changed",
-          recipientUid: after.residentId,
+          recipientUid: after.residentUid,
           title,
           body,
           href,
           payload: { requestId: rid, status: after.status },
         }),
-        sendFcmToUser(after.residentId, {
+        sendFcmToUser(after.residentUid, {
           title,
           body,
           href,

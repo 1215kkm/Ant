@@ -12,12 +12,13 @@
     "build": "npm --workspace apps/web run build",
     "lint": "npm --workspace apps/web run lint",
     "typecheck": "npm --workspace apps/web run typecheck && npm --workspace functions run typecheck",
-    "emulators": "firebase emulators:start --import=./seeds --export-on-exit"
+    "emulators": "firebase emulators:start --export-on-exit=./seeds",
+    "emulators:seeded": "firebase emulators:start --import=./seeds --export-on-exit=./seeds"
   },
   "devDependencies": {
     "firebase-tools": "^13.0.0"
   },
   "engines": {
-    "node": ">=20"
+    "node": "20.x || 22.x"
   }
 }
