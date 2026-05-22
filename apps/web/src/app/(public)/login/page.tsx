@@ -11,6 +11,7 @@ import {
 } from "firebase/auth";
 import { toast } from "sonner";
 import { auth } from "@/lib/firebase/client";
+import { syncAuthCookie } from "@/lib/auth/AuthProvider";
 import { Icon } from "@/components/ui/Icon";
 
 type Mode = "email" | "phone";
@@ -148,6 +149,9 @@ function EmailForm() {
         await signInWithEmailAndPassword(auth, email, password);
         toast.success("로그인되었습니다.");
       }
+      // 미들웨어 race 회피: AuthProvider.onAuthStateChanged 콜백을 기다리지 않고
+      // 쿠키를 직접 set 한 뒤 navigate. 이게 없으면 첫 진입이 다시 /login 으로 튕김.
+      syncAuthCookie(true);
       router.replace(next);
     } catch (err) {
       const message = err instanceof Error ? err.message : "오류가 발생했습니다.";
@@ -272,6 +276,8 @@ function PhoneForm() {
     try {
       await confirmation.confirm(code);
       toast.success("로그인되었습니다.");
+      // 미들웨어 race 회피 — 이메일 로그인과 동일.
+      syncAuthCookie(true);
       router.replace(next);
     } catch (err) {
       const message = err instanceof Error ? err.message : "인증에 실패했습니다.";

@@ -79,8 +79,11 @@ export function useAuth(): AuthState {
  * 미들웨어가 보호 라우트의 SSR/RSC HTML을 비로그인 사용자에게 보내지 않도록
  * 동기화하는 가벼운 플래그 쿠키. 실제 토큰 검증은 클라이언트 RequireAuth·
  * Firestore 규칙이 담당한다.
+ *
+ * 외부 노출(export): 로그인 핸들러가 router.replace 직전에 직접 호출해
+ * onAuthStateChanged 콜백 타이밍과 무관하게 쿠키가 박혀 있도록 한다.
  */
-function syncAuthCookie(loggedIn: boolean) {
+export function syncAuthCookie(loggedIn: boolean) {
   if (typeof document === "undefined") return;
   const secure =
     typeof location !== "undefined" && location.protocol === "https:"
