@@ -109,4 +109,56 @@
       "GRAD" 0,
       "opsz" 24;
   }
+
+  /* ===== Crowny 메인 CTA (그라데이션) =====
+     design-system.md 8.0 "메인 버튼" — 1차 액션 전용.
+     보조 액션엔 쓰지 않음 (시각 위계 보존). */
+  .btn-crowny {
+    background: linear-gradient(135deg, #6C3CE1 0%, #D63384 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 16px rgba(108, 60, 225, 0.4);
+    transition: transform 0.15s ease, box-shadow 0.2s ease, filter 0.2s ease;
+  }
+  .btn-crowny:hover {
+    box-shadow: 0 6px 20px rgba(108, 60, 225, 0.5);
+    filter: brightness(1.04);
+  }
+  .btn-crowny:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(108, 60, 225, 0.35);
+  }
+  .btn-crowny:disabled,
+  .btn-crowny[aria-disabled="true"] {
+    opacity: 0.5;
+    box-shadow: none;
+    filter: grayscale(0.2);
+    cursor: not-allowed;
+  }
+
+  /* ===== 활성 탭 pill (바텀 네비) =====
+     design-system.md 6.0 — 활성 아이콘 뒤에 연보라 캡슐. */
+  .tab-pill-active {
+    background: rgba(108, 60, 225, 0.12);
+    border-radius: 9999px;
+  }
+
+  /* ===== 상단 보라 헤더 (홈) =====
+     design-system.md "보라 배경 + 흰색 시트" 구조 — 상단 보라 → 콘텐츠는 흰 시트로 분리. */
+  .bg-crowny-header {
+    background: linear-gradient(165deg, #5B2FD6 0%, #6C3CE1 60%, #7C4DFF 100%);
+  }
+
+  /* ===== 흰색 바텀 시트 =====
+     상단 32px 라운드 (design-system.md). */
+  .sheet-top {
+    background: #FFFFFF;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
+  }
+
+  /* ===== 마스코트/주요 카드 글로우 =====
+     보라 글로우 그림자 — 정보 카드가 떠 보이도록. */
+  .shadow-crowny-glow {
+    box-shadow: 0 8px 24px rgba(108, 60, 225, 0.18);
+  }
 }

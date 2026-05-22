@@ -23,43 +23,52 @@ export default function HomePage() {
     <>
       {!splashed && <SplashScreen onDone={() => setSplashed(true)} />}
 
-      <main className="mx-auto flex min-h-screen max-w-screen-sm flex-col bg-sky-soft pb-28">
-        <Header
-          user={user}
-          loading={loading}
-          claims={claims}
-          onSignOut={async () => {
-            await signOut();
-            router.refresh();
-          }}
-        />
+      <main className="mx-auto flex min-h-screen max-w-screen-sm flex-col bg-brand-50 pb-28">
+        {/* 상단 보라 헤더 (design-system.md "보라 배경 + 흰색 시트" 구조) */}
+        <div className="bg-crowny-header relative">
+          <Header
+            user={user}
+            loading={loading}
+            claims={claims}
+            onSignOut={async () => {
+              await signOut();
+              router.refresh();
+            }}
+          />
+          {/* 헤더 하단 살짝 여백 — 시트가 헤더에 겹쳐 올라오는 시각 효과 */}
+          <div className="h-6" />
+        </div>
 
-        <CharacterCard
-          isLoggedIn={!!user}
-          userName={user?.displayName || user?.email?.split("@")[0]}
-        />
+        {/* 흰색 시트 — 상단 모서리만 둥글게 (32px) */}
+        <div className="sheet-top -mt-6 flex-1 pt-4">
+          <CharacterCard
+            isLoggedIn={!!user}
+            userName={user?.displayName || user?.email?.split("@")[0]}
+          />
 
-        <section className="px-4 pt-5">
-          <Link
-            href="/requests/new"
-            className="flex min-h-tap items-center justify-center rounded-3xl bg-brand-900 px-6 py-5 text-base font-semibold text-white shadow-lg shadow-brand-900/20 transition active:scale-[0.98] active:bg-brand-800"
-          >
-            <Icon name="add_task" size={24} className="mr-2" />
-            새 수리/문의 요청 작성
-          </Link>
-          <p className="mt-2 text-center text-sm text-brand-700/80">
-            사진·영상 첨부 · 평균 답변 25분
-          </p>
-        </section>
+          {/* 메인 CTA — 1차 액션 전용 그라데이션 (.btn-crowny) */}
+          <section className="px-4 pt-5">
+            <Link
+              href="/requests/new"
+              className="btn-crowny flex min-h-tap items-center justify-center rounded-2xl px-6 py-5 text-base font-semibold"
+            >
+              <Icon name="add_task" size={24} className="mr-2" />
+              새 수리/문의 요청 작성
+            </Link>
+            <p className="mt-2 text-center text-sm text-brand-700/80">
+              사진·영상 첨부 · 평균 답변 25분
+            </p>
+          </section>
 
-        <TodaySection
-          isManager={isManager}
-          isSuper={isSuper}
-          role={claims?.role}
-          uid={user?.uid}
-        />
+          <TodaySection
+            isManager={isManager}
+            isSuper={isSuper}
+            role={claims?.role}
+            uid={user?.uid}
+          />
 
-        <QuickActions isSuper={isSuper} isManager={isManager} />
+          <QuickActions isSuper={isSuper} isManager={isManager} />
+        </div>
 
         <BottomTab />
       </main>
@@ -101,12 +110,13 @@ function Header({
     : "";
 
   return (
+    // 보라 헤더 위에 얹히는 영역 → 텍스트/아이콘 모두 흰색 계열로.
     <header className="flex items-start justify-between px-5 pb-2 pt-6">
       <div className="flex-1">
-        <p className="text-xl font-semibold text-brand-900">{greeting}</p>
-        <p className="mt-1 text-sm text-brand-700">{today}</p>
+        <p className="text-xl font-semibold text-white">{greeting}</p>
+        <p className="mt-1 text-sm text-white/80">{today}</p>
         {!loading && user && (
-          <p className="mt-1 text-sm text-brand-700/80">
+          <p className="mt-1 text-sm text-white/70">
             {claims?.role ? ROLE_LABEL_KO[claims.role] : "역할 미지정"}
           </p>
         )}
@@ -117,7 +127,7 @@ function Header({
           <Link
             href="/notifications"
             aria-label="알림"
-            className="inline-flex min-h-tap min-w-tap items-center justify-center rounded-full bg-white/80 text-brand-700 shadow-sm backdrop-blur"
+            className="inline-flex min-h-tap min-w-tap items-center justify-center rounded-full bg-white/15 text-white shadow-sm backdrop-blur transition hover:bg-white/25"
           >
             <Icon name="notifications" />
           </Link>
@@ -125,7 +135,7 @@ function Header({
             type="button"
             onClick={onSignOut}
             aria-label="로그아웃"
-            className="inline-flex min-h-tap min-w-tap items-center justify-center rounded-full bg-white/80 text-brand-700 shadow-sm backdrop-blur"
+            className="inline-flex min-h-tap min-w-tap items-center justify-center rounded-full bg-white/15 text-white shadow-sm backdrop-blur transition hover:bg-white/25"
           >
             <Icon name="logout" />
           </button>
@@ -133,7 +143,7 @@ function Header({
       ) : (
         <Link
           href="/login"
-          className="inline-flex min-h-tap items-center gap-1 rounded-full bg-brand-500 px-4 py-2 text-sm font-medium text-white shadow-sm"
+          className="inline-flex min-h-tap items-center gap-1 rounded-full bg-white px-4 py-2 text-sm font-semibold text-brand-600 shadow-sm transition hover:bg-brand-50"
         >
           <Icon name="login" size={20} />
           로그인
@@ -156,7 +166,8 @@ function CharacterCard({
 
   return (
     <section className="px-4 pt-3">
-      <div className="bg-character-card relative overflow-hidden rounded-[2rem] p-5 shadow-md shadow-brand-500/10">
+      {/* 마스코트 카드: design-system.md 카드 radius 2xl(20px) + 보라 글로우 그림자. */}
+      <div className="bg-character-card shadow-crowny-glow relative overflow-hidden rounded-[20px] p-5">
         <div className="flex items-start gap-2">
           <p className="text-lg font-semibold text-brand-900">개미</p>
           <Icon name="cleaning_services" size={20} className="mt-0.5 text-brand-500" />
@@ -190,7 +201,7 @@ function StatTile({
   valueColor: string;
 }) {
   return (
-    <div className="flex items-center gap-3 rounded-2xl bg-white/80 px-4 py-3 backdrop-blur">
+    <div className="flex items-center gap-3 rounded-2xl bg-white/70 px-4 py-3 ring-1 ring-brand-100 backdrop-blur">
       <span className="text-2xl" aria-hidden="true">
         {emoji}
       </span>
@@ -259,7 +270,8 @@ function TodaySection({
         </Link>
       </div>
 
-      <div className="rounded-3xl bg-white/85 p-4 shadow-sm backdrop-blur">
+      {/* 큰 정보 카드: radius 24px (design-system.md 큰 카드 20~24px). */}
+      <div className="rounded-[20px] border border-brand-100/60 bg-white p-4 shadow-sm">
         <div className="flex items-center gap-3">
           <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-100">
             <Icon name="list_alt" className="text-brand-600" size={28} />
@@ -315,10 +327,11 @@ function QuickActions({ isSuper, isManager }: { isSuper: boolean; isManager: boo
 }
 
 function ActionTile({ href, emoji, label }: { href: string; emoji: string; label: string }) {
+  // 빠른 메뉴 타일: design-system.md 카드 radius 16px + 약한 보더 + hover 시 그림자 강화.
   return (
     <Link
       href={href}
-      className="flex min-h-tap items-center gap-3 rounded-2xl bg-white/85 px-4 py-4 text-base font-medium text-brand-900 shadow-sm backdrop-blur transition active:scale-[0.98] active:bg-white"
+      className="flex min-h-tap items-center gap-3 rounded-2xl border border-brand-100/60 bg-white px-4 py-4 text-base font-medium text-brand-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98]"
     >
       <span className="text-2xl" aria-hidden="true">
         {emoji}
@@ -331,7 +344,7 @@ function ActionTile({ href, emoji, label }: { href: string; emoji: string; label
 function BottomTab() {
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-screen-sm items-stretch rounded-t-3xl border-t border-brand-100 bg-white/95 backdrop-blur"
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-screen-sm items-stretch rounded-t-[28px] border-t border-brand-100 bg-white/95 shadow-[0_-4px_20px_rgba(108,60,225,0.08)] backdrop-blur"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-label="하단 탭"
     >
@@ -356,16 +369,26 @@ function TabItem({
   active?: boolean;
   filled?: boolean;
 }) {
+  // design-system.md 6.0 바텀 네비: 활성 = 보라 텍스트 + 연보라 pill,
+  // 비활성 = 연보라(#C4B5FD ≈ brand-300) 텍스트.
   return (
     <Link
       href={href}
+      aria-current={active ? "page" : undefined}
       className={
-        "flex min-h-tap flex-1 flex-col items-center justify-center gap-1 px-2 py-2 text-xs " +
-        (active ? "text-brand-600" : "text-brand-900/60")
+        "flex min-h-tap flex-1 flex-col items-center justify-center gap-1 px-2 py-2 text-xs transition " +
+        (active ? "text-brand-600" : "text-brand-300 hover:text-brand-500")
       }
     >
-      <Icon name={name} filled={filled && active} size={24} />
-      <span>{label}</span>
+      <span
+        className={
+          "inline-flex items-center justify-center rounded-full transition " +
+          (active ? "tab-pill-active px-3 py-1" : "px-3 py-1")
+        }
+      >
+        <Icon name={name} filled={filled && active} size={24} />
+      </span>
+      <span className={active ? "font-semibold" : "font-medium"}>{label}</span>
     </Link>
   );
 }

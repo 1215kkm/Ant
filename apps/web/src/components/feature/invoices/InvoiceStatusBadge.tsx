@@ -1,5 +1,8 @@
 import { INVOICE_STATUS_LABEL_KO, type InvoiceStatus } from "@/lib/types";
 
+/**
+ * 청구 상태 배지 — design-system.md "모임 상태 배지" 명세 (StatusBadge와 동일).
+ */
 const STYLES: Record<InvoiceStatus, string> = {
   issued: "bg-brand-50 text-brand-700",
   sent: "bg-brand-100 text-brand-800",
@@ -10,7 +13,12 @@ const STYLES: Record<InvoiceStatus, string> = {
 
 export function InvoiceStatusBadge({ status }: { status: InvoiceStatus }) {
   return (
-    <span className={"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs " + STYLES[status]}>
+    <span
+      className={
+        "inline-flex items-center rounded-md px-2 py-0.5 text-xs font-bold tracking-tight " +
+        STYLES[status]
+      }
+    >
       {INVOICE_STATUS_LABEL_KO[status]}
     </span>
   );

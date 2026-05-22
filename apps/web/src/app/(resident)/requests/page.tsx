@@ -23,14 +23,14 @@ export default function MyRequestsPage() {
   }, [user]);
 
   return (
-    <main className="mx-auto max-w-screen-sm pb-24">
+    <main className="mx-auto min-h-screen max-w-screen-sm bg-brand-50 pb-24">
       <PageHeader
         title="내 요청"
         back={false}
         action={
           <Link
             href="/requests/new"
-            className="inline-flex min-h-tap items-center gap-1 rounded-lg bg-brand-500 px-3 py-2 text-sm text-white"
+            className="btn-crowny inline-flex min-h-tap items-center gap-1 rounded-xl px-4 py-2 text-sm font-semibold"
           >
             <Icon name="add" size={20} />
             <span>새 요청</span>
@@ -38,40 +38,42 @@ export default function MyRequestsPage() {
         }
       />
 
-      {loading ? (
-        <p className="px-4 text-sm text-brand-700">불러오는 중…</p>
-      ) : items.length === 0 ? (
-        <EmptyState
-          icon="inbox"
-          title="아직 요청이 없습니다"
-          description="우측 상단 새 요청 버튼으로 작성해 보세요."
-        />
-      ) : (
-        <ul className="flex flex-col gap-2 px-4">
-          {items.map((r) => (
-            <li key={r.id}>
-              <Link
-                href={`/requests/${r.id}`}
-                className="flex items-start gap-3 rounded-xl border border-brand-100 bg-white p-4 active:bg-brand-50"
-              >
-                <div className="flex-1">
-                  <div className="mb-1 flex items-center gap-2">
-                    <StatusBadge status={r.status} />
-                    <span className="text-xs text-brand-700/70">
-                      {REQUEST_TYPE_LABEL_KO[r.type]}
-                    </span>
+      <div className="sheet-top -mt-4 bg-white px-4 pt-6">
+        {loading ? (
+          <p className="text-sm text-brand-700">불러오는 중…</p>
+        ) : items.length === 0 ? (
+          <EmptyState
+            icon="inbox"
+            title="아직 요청이 없습니다"
+            description="우측 상단 새 요청 버튼으로 작성해 보세요."
+          />
+        ) : (
+          <ul className="flex flex-col gap-2">
+            {items.map((r) => (
+              <li key={r.id}>
+                <Link
+                  href={`/requests/${r.id}`}
+                  className="flex items-start gap-3 rounded-2xl border border-brand-100 bg-white p-4 shadow-sm active:bg-brand-50"
+                >
+                  <div className="flex-1">
+                    <div className="mb-1 flex items-center gap-2">
+                      <StatusBadge status={r.status} />
+                      <span className="text-xs text-brand-700/70">
+                        {REQUEST_TYPE_LABEL_KO[r.type]}
+                      </span>
+                    </div>
+                    <p className="text-base font-semibold text-brand-900">{r.title}</p>
+                    {r.requestNumber && (
+                      <p className="mt-0.5 text-xs text-brand-700/70">{r.requestNumber}</p>
+                    )}
                   </div>
-                  <p className="text-base text-brand-900">{r.title}</p>
-                  {r.requestNumber && (
-                    <p className="mt-0.5 text-xs text-brand-700/70">{r.requestNumber}</p>
-                  )}
-                </div>
-                <Icon name="chevron_right" className="text-brand-400" />
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+                  <Icon name="chevron_right" className="text-brand-400" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </main>
   );
 }

@@ -33,7 +33,6 @@ export default function NewRequestPage() {
   const [buildingId, setBuildingId] = useState<string>("");
   const fileRef = useRef<HTMLInputElement>(null);
 
-  // 사용자가 속한 첫 번째 건물에서 본인의 resident 레코드를 찾는다.
   useEffect(() => {
     if (!user) return;
     getUser(user.uid).then(async (u) => {
@@ -102,10 +101,10 @@ export default function NewRequestPage() {
   }
 
   return (
-    <main className="mx-auto max-w-screen-sm pb-12">
+    <main className="mx-auto min-h-screen max-w-screen-sm bg-brand-50 pb-12">
       <PageHeader title="새 요청" subtitle="수리 또는 문의 사항을 보내주세요" />
 
-      <form onSubmit={submit} className="flex flex-col gap-4 px-4">
+      <form onSubmit={submit} className="sheet-top -mt-4 flex flex-col gap-4 bg-white px-4 pt-6 pb-6">
         <div className="flex rounded-xl bg-brand-50 p-1 text-sm">
           {(["repair", "inquiry"] as RequestType[]).map((t) => (
             <button
@@ -123,7 +122,7 @@ export default function NewRequestPage() {
         </div>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-brand-700">분류</span>
+          <span className="mb-1 block text-sm font-semibold text-brand-700">분류</span>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
@@ -136,7 +135,7 @@ export default function NewRequestPage() {
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-brand-700">제목</span>
+          <span className="mb-1 block text-sm font-semibold text-brand-700">제목</span>
           <input
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -148,7 +147,7 @@ export default function NewRequestPage() {
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm text-brand-700">상세 내용</span>
+          <span className="mb-1 block text-sm font-semibold text-brand-700">상세 내용</span>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -160,7 +159,7 @@ export default function NewRequestPage() {
         </label>
 
         <div>
-          <span className="mb-1 block text-sm text-brand-700">사진/영상 (선택)</span>
+          <span className="mb-1 block text-sm font-semibold text-brand-700">사진/영상 (선택)</span>
           <div className="flex flex-wrap gap-2">
             {files.map((f, i) => (
               <FileChip
@@ -195,7 +194,7 @@ export default function NewRequestPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 inline-flex min-h-tap items-center justify-center rounded-xl bg-brand-500 px-4 py-3 text-base font-medium text-white shadow-sm active:bg-brand-600 disabled:opacity-50"
+          className="btn-crowny mt-2 inline-flex min-h-tap items-center justify-center rounded-xl px-4 py-3 text-base font-semibold disabled:opacity-50"
         >
           {submitting ? "전송 중…" : "요청 보내기"}
         </button>

@@ -184,7 +184,8 @@ function EmailForm() {
       <button
         type="submit"
         disabled={submitting || (signupMode && !agreed)}
-        className="mt-2 inline-flex min-h-tap items-center justify-center rounded-xl bg-brand-500 px-4 py-3 text-base font-medium text-white shadow-sm transition active:bg-brand-600 disabled:opacity-50"
+        aria-busy={submitting}
+        className="btn-crowny mt-2 inline-flex min-h-tap items-center justify-center rounded-xl px-4 py-3 text-base font-semibold disabled:opacity-50"
       >
         {submitting ? "처리 중…" : signupMode ? "가입하기" : "로그인"}
       </button>
@@ -303,7 +304,8 @@ function PhoneForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="mt-2 inline-flex min-h-tap items-center justify-center rounded-xl bg-brand-500 px-4 py-3 text-base font-medium text-white shadow-sm active:bg-brand-600 disabled:opacity-50"
+          aria-busy={submitting}
+          className="btn-crowny mt-2 inline-flex min-h-tap items-center justify-center rounded-xl px-4 py-3 text-base font-semibold disabled:opacity-50"
         >
           {submitting ? "전송 중…" : "인증번호 받기"}
         </button>
@@ -326,7 +328,8 @@ function PhoneForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="mt-2 inline-flex min-h-tap items-center justify-center rounded-xl bg-brand-500 px-4 py-3 text-base font-medium text-white shadow-sm active:bg-brand-600 disabled:opacity-50"
+        aria-busy={submitting}
+        className="btn-crowny mt-2 inline-flex min-h-tap items-center justify-center rounded-xl px-4 py-3 text-base font-semibold disabled:opacity-50"
       >
         {submitting ? "확인 중…" : "확인"}
       </button>
